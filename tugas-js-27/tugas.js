@@ -51,9 +51,9 @@ console.log("Status buka: " + statusBuka);
 //Penggabungan String (Concatenation): Menempelkan dua teks jika salah satu atau kedua data bertipe string (teks).
 
 
-/*=================================================================================================================*/
-
-// LANGKAH 2
+/*=================================================================================================================
+ LANGKAH 2
+=================================================================================================================*/
 
 const usaha = {
   nama: "Angkringan Sore",
@@ -107,153 +107,129 @@ console.log("Produk terakhir: " + daftarProduk[daftarProduk.length - 1].nama);
    [4]. Indeks [4] sebenarnya elemen ke-5 yang tidak ada, sehingga
    mengaksesnya mencetak: undefined. Kalau ditulis daftarProduk[4].nama,
    program malah error TypeError karena mencoba membaca properti dari
-   undefined.
+   undefined */
 
-Output program:
-  Nama usaha: Kopi Senja
-  Kota: Yogyakarta
-  Produk pertama: Kopi Susu
-  Produk terakhir: Cokelat Panas
-  =========================================================================*/
+   /*================================================================================
+   LANGKAH 3
+   ================================================================================*/
+   // === LANGKAH 3: Perhitungan dan Tampilan ===
 
-// ===== DATA (dari langkah sebelumnya) =====
-const TARIF_PAJAK = 0.11;
-const tahunSekarang = 2026;
+const CURRENT_YEAR = 2026;
+const usiaUsaha = CURRENT_YEAR - usaha.tahunBerdiri;
 
-const usaha = {
-  nama: "Kopi Senja",
-  pemilik: "Budi Santoso",
-  kota: "Yogyakarta",
-  tahunBerdiri: 2020,
-  statusBuka: true,
-  nomorWhatsApp: "08123456789",
-  website: null
-};
+// Menghitung harga setelah pajak untuk tiap produk
+const produkPajak = usaha.produk.map(p => ({
+    nama: p.nama,
+    hargaPajak: Math.round(p.harga * (1 + TARIF_PAJAK))
+}));
 
-const daftarProduk = [
-  { nama: "Kopi Susu", harga: 18000 },
-  { nama: "Es Teh Manis", harga: 7500 },
-  { nama: "Roti Bakar", harga: 15000 },
-  { nama: "Cokelat Panas", harga: 16000 }
-];
+// Mencari harga termurah dan termahal
+const daftarHargaPajak = produkPajak.map(p => p.hargaPajak);
+const termurah = Math.min(...daftarHargaPajak);
+const termahal = Math.max(...daftarHargaPajak);
 
-// ===== PERHITUNGAN =====
-// Math.round menghindari hasil desimal ekor panjang akibat floating point
-const hitungHargaPajak = (harga) => Math.round(harga * (1 + TARIF_PAJAK));
+// Membuat format string daftar produk
+let daftarProdukStr = "";
+produkPajak.forEach((p, index) => {
+    daftarProdukStr += `${index + 1}. ${p.nama.padEnd(14, ' ')} : Rp ${p.hargaPajak}\n`;
+});
 
-const daftarHargaPajak = daftarProduk.map((produk) => hitungHargaPajak(produk.harga));
-const hargaTermurah = Math.min(...daftarHargaPajak);
-const hargaTermahal = Math.max(...daftarHargaPajak);
-const usiaUsaha = tahunSekarang - usaha.tahunBerdiri;
-
-// ===== PERSIAPAN TAMPILAN =====
-const statusTeks = usaha.statusBuka ? "Buka" : "Tutup";
-const websiteTeks = usaha.website ?? "belum ada"; // null -> "belum ada"
-const barisProduk = daftarProduk
-  .map((produk, i) => `${i + 1}. ${produk.nama.padEnd(14)}: Rp ${daftarHargaPajak[i]}`)
-  .join("\n");
-
-const kartu = `===== KARTU USAHA =====
+// Mencetak kartu usaha menggunakan template literal
+const kartuUsaha = `
+===== KARTU USAHA =====
 Nama Usaha  : ${usaha.nama}
 Pemilik     : ${usaha.pemilik}
 Kota        : ${usaha.kota}
 Usia Usaha  : ${usiaUsaha} tahun
-Status      : ${statusTeks}
-Website     : ${websiteTeks}
+Status      : ${usaha.status}
+Website     : ${usaha.website}
 
-Daftar Produk (harga + PPN ${TARIF_PAJAK * 100}%):
-${barisProduk}
+Daftar Produk (harga + PPN 11%):
+${daftarProdukStr.trim()}
+Termurah : Rp ${termurah}
+Termahal : Rp ${termahal}
+=======================
+`;
 
-Termurah : Rp ${hargaTermurah}
-Termahal : Rp ${hargaTermahal}
-=======================`;
-
-console.log(kartu);
-
-// ===== BUKTI UNTUK JAWABAN NOMOR 3 =====
-daftarProduk[0].harga = 20000; // harga Kopi Susu diubah SETELAH kartu tercetak
-
-console.log("\n--- Setelah harga Kopi Susu diubah menjadi 20000 ---");
-console.log(`Teks kartu lama (tidak berubah) : ${barisProduk.split("\n")[0]}`);
-console.log(`Array hasil lama (tidak berubah): Rp ${daftarHargaPajak[0]}`);
-console.log(`Dihitung ulang                  : Rp ${hitungHargaPajak(daftarProduk[0].harga)}`);
+console.log(kartuUsaha);
 
 /*
-=====================================================================
-JAWABAN
-=====================================================================
-
-1. Pilihan const / let untuk setiap variabel
-   Semuanya memakai const, dan itu tepat karena tidak ada variabel yang
-   perlu diberi nilai baru (reassign) setelah dibuat.
-
-   - TARIF_PAJAK        : const. Tarif PPN tetap, tidak boleh berubah di tengah program.
-   - tahunSekarang      : const. Satu nilai tetap selama program berjalan.
-   - usaha              : const. Variabelnya selalu menunjuk ke object yang sama.
-   - daftarProduk       : const. Selalu menunjuk ke array yang sama.
-   - hitungHargaPajak   : const. Fungsi tidak akan diganti dengan fungsi lain.
-   - daftarHargaPajak   : const. Array hasil map(), dibuat sekali.
-   - hargaTermurah      : const. Hasil Math.min, dihitung sekali.
-   - hargaTermahal      : const. Hasil Math.max, dihitung sekali.
-   - usiaUsaha          : const. Hasil pengurangan, dihitung sekali.
-   - statusTeks         : const. Hasil ternary, ditentukan sekali.
-   - websiteTeks        : const. Hasil operator ??, ditentukan sekali.
-   - barisProduk        : const. String hasil map().join(), dibuat sekali.
-   - kartu              : const. String template akhir, dibuat sekali.
-   - produk, i (parameter di dalam map): otomatis baru untuk tiap
-     pemanggilan fungsi, tidak perlu dideklarasikan lagi.
-
-   Catatan: const hanya mengunci penunjuk variabel, bukan isi object atau
-   array. Karena itu `daftarProduk[0].harga = 20000` tetap boleh,
-   sedangkan `daftarProduk = []` akan error.
-   let baru diperlukan jika nilainya memang diganti, misalnya penghitung
-   di for-loop (`for (let i = 0; ...)`). Program ini memakai map(), jadi
-   tidak butuh let.
-
-2. Perhitungan manual (produk: Kopi Susu, harga 18000)
-   Langkah 1: pajak  = 18000 x 11%  = 18000 x 0,11 = 1980
-   Langkah 2: harga akhir = 18000 + 1980 = 19980
-   (cara cepat: 18000 x 1,11 = 19980)
-   Hasil program: Rp 19980.
-   Jawabannya sama. Cek tambahan: Es Teh Manis 7500 x 1,11 = 8325, juga
-   sama dengan output program.
-
-3. Apakah hasil yang sudah tercetak ikut berubah?
-   Tidak. Buktinya ada di kode bagian "BUKTI": setelah harga Kopi Susu
-   diubah menjadi 20000, teks kartu lama dan daftarHargaPajak[0) tetap
-   19980, sedangkan hitungan ulang menghasilkan 22200.
-   Alasannya: console.log mencetak nilai pada saat dipanggil. Teks di
-   `kartu` sudah terbentuk menjadi string jadi (snapshot), dan
-   daftarHargaPajak berisi angka hasil hitung sebelumnya, bukan rumus
-   yang terhubung ke object usaha. JavaScript tidak memperbarui hasil
-   lama secara otomatis seperti rumus di spreadsheet. Agar hasilnya
-   berubah, perhitungan harus dijalankan lagi (di sini lewat
-   hitungHargaPajak).
-
-Output program:
-  ===== KARTU USAHA =====
-  Nama Usaha  : Kopi Senja
-  Pemilik     : Budi Santoso
-  Kota        : Yogyakarta
-  Usia Usaha  : 6 tahun
-  Status      : Buka
-  Website     : belum ada
-
-  Daftar Produk (harga + PPN 11%):
-  1. Kopi Susu     : Rp 19980
-  2. Es Teh Manis  : Rp 8325
-  3. Roti Bakar    : Rp 16650
-  4. Cokelat Panas : Rp 17760
-
-  Termurah : Rp 8325
-  Termahal : Rp 19980
-  =======================
-
-  --- Setelah harga Kopi Susu diubah menjadi 20000 ---
-  Teks kartu lama (tidak berubah) : 1. Kopi Susu     : Rp 19980
-  Array hasil lama (tidak berubah): Rp 19980
-  Dihitung ulang                  : Rp 22200
-=====================================================================
+Catatan & Jawaban Langkah 3:
+1. Alasan pemilihan const: 
+   Semua variabel di langkah ini menggunakan `const` karena nilainya diinisialisasi sekali dan tidak pernah diubah ulang (re-assigned) di sepanjang program.
+2. Perbandingan manual (Kopi Susu):
+   - Harga dasar: Rp 18.000
+   - PPN 11%: 18.000 * 0.11 = 1.980
+   - Total: 18.000 + 1.980 = 19.980 (Sama persis dengan hasil program).
+3. Apakah perubahan harga mengubah hasil tercetak otomatis?
+   Tidak. Template literal mencetak string statis pada saat dieksekusi. 
+   Contoh pembuktian:
+   let harga = 18000;
+   let teks = `Harga: ${harga}`;
+   console.log(teks); // Harga: 18000
+   harga = 25000;
+   console.log(teks); // Tetap tercetak "Harga: 18000" (tidak otomatis berubah).
 */
-  
-  
+
+   /*================================================================================
+   LANGKAH 4
+   ================================================================================*/
+   // === LANGKAH 4: Detektif Tipe Data ===
+
+// Tebakan: "number"
+// Hasil asli: "number"  ✔
+console.log(typeof 42);
+
+// Tebakan: "string"
+// Hasil asli: "string"  ✔
+console.log(typeof "42");
+
+// Tebakan: "boolean"
+// Hasil asli: "boolean"  ✔
+console.log(typeof true);
+
+// Tebakan: "undefined"
+// Hasil asli: "undefined"  ✔
+console.log(typeof undefined);
+
+// Tebakan: "object"
+// Hasil asli: "object"  ✔ (Bug historis JavaScript)
+console.log(typeof null);
+
+// Tebakan: "object"
+// Hasil asli: "object"  ✔ (Array adalah jenis object khusus di JS)
+console.log(typeof [1, 2, 3]);
+
+// Tebakan: "object"
+// Hasil asli: "object"  ✔
+console.log(typeof { nama: "Budi" });
+
+// Tebakan: "53"
+// Hasil asli: "53"  ✔ (Penggabungan string / concatenation)
+console.log("5" + 3);
+
+// Tebakan: 2
+// Hasil asli: 2  ✔ (Type coercion otomatis mengubah string ke number pada operator pengurangan)
+console.log("5" - 3);
+
+// Tebakan: NaN
+// Hasil asli: NaN  ✔ (Not a Number, karena "abc" tidak dapat dikonversi ke angka)
+console.log("abc" * 2);
+
+// Tebakan: Infinity
+// Hasil asli: Infinity  ✔ (Pembagian angka dengan nol menghasilkan nilai Infinity di JS)
+console.log(10 / 0);
+
+// Tebakan: "object"
+// Hasil asli: "object"  ✔ (karena nilai usaha.website adalah null)
+console.log(typeof usaha.website);
+
+/*
+Catatan & Jawaban Langkah 4:
+1. Penjelasan tebakan yang meleset: 
+   (Jika ada tebakan yang meleset, umumnya terjadi pada `typeof null` yang mengembalikan `"object"` alih-alih `"null"`).
+2. Apakah null adalah object?
+   Secara teknis di JavaScript iya karena bug dari versi pertama bahasa ini, tetapi secara konseptual `null` adalah tipe data primitif khusus yang merepresentasikan ketiadaan nilai. Kepada teman, bisa dijelaskan sebagai "warisan bug masa lalu yang dipertahankan demi kompatibilitas".
+3. Mengapa "5" + 3 dan "5" - 3 berbeda?
+   Operator `+` melakukan penggabungan teks (string concatenation) jika salah satu sisinya adalah string. Sebaliknya, operator `-` atau `*` hanya untuk aritmatika, sehingga JavaScript secara otomatis memaksa string `"5"` berubah menjadi angka (`type coercion`) sebelum dikurangi.
+*/
