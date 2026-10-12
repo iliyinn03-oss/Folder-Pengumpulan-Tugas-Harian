@@ -100,5 +100,5 @@ switch (hari) {
 //   Jawab: "0" adalah string non-kosong => truthy. [] adalah object (array) => truthy. Visual kosong bukan berarti falsy di JS.
 // - Pada Potongan B, belanja bernilai 120000 tetapi hasilnya bukan "Diskon 15%". Kenapa? Bagaimana cara memperbaikinya?
 //   Jawab: Karena urutan pengecekan if...else if salah (dimulai dari 25000), kondisi pertama sudah true jadi cabang lain tidak diperiksa. Perbaiki dengan mengecek dari nilai terbesar ke kecil (>=100000, >=50000, >=25000).
-// - Pada Potongan C, kenapa yang tercetak dua baris? Apa yang harus ditambahkan agar hanya satu baris yang tercetak?
+// - Pada Potongan C, kenapa yang tercetak dua baris? Apa yang harus ditambahkan agar hanya satu baris yang tercetak?.
 //   Jawab: Karena tidak ada break pada case "sabtu", terjadi fall-through ke case berikutnya; tambahkan break setelah tiap case untuk menghentikan eksekusi.g
