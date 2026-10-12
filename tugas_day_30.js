@@ -94,6 +94,7 @@ switch (hari) {
 // Karena tidak ada break setelah case "sabtu", eksekusi jatuh ke case "minggu" (fall-through) sehingga dua baris tercetak.
 // Untuk hanya mencetak satu baris, tambahkan break di akhir setiap case (kecuali kalau memang ingin fall-through).
 
+// 
 // ---------------------------
 // Pertanyaan Langkah 1 (jawaban singkat di komentar):
 // - Pada Potongan A, kenapa "0" dan [] tetap masuk ke dalam if, padahal terlihat seperti kosong?
